@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Prediction</title>
+    <link rel="stylesheet" href="app.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <h1 id="agepredict">Biological Age Prediction</h1>
+
+        <div>
+            <label for="haematocrit">Haematocrit:</label><br>
+            <input type="text" id="haematocrit" name="haematocrit">
+        </div>
+        <div>
+            <label for="haemoglobin">Haemoglobin:</label><br>
+            <input type="text" id="haemoglobin" name="haemoglobin">
+        </div>
+
+        <div>
+            <label for="erythrocyte">Erythrocyte:</label><br>
+            <input type="text" id="erythrocyte" name="erythrocyte">
+        </div>
+
+        <div>
+            <label for="leucocyte">Leucocyte:</label><br>
+            <input type="text" id="leucocyte" name="leucocyte">
+        </div>
+
+        <div>
+            <label for="thrombocyte">Thrombocyte:</label><br>
+            <input type="text" id="thrombocyte" name="thrombocyte">
+        </div>
+        <div class="columns">
+            <div>
+                <label for="mch">mch:</label><br>
+                <input type="text" id="mch" name="mch">
+            </div>
+            <div>
+                <label for="mchc">mchc:</label><br>
+                <input type="text" id="mchc" name="mchc">
+            </div>
+            <div>
+                <label for="mcv">mcv:</label><br>
+                <input type="text" id="mcv" name="mcv">
+            </div>
+        </div>
+        <button onclick="predictAge()" class="btn">Predict Age</button>
+
+        <p id="result"></p>
+
+    </div>
+    <div class="content">
+        <h1>Get Quick</h1>
+        <h1 id="h1">Medical Services</h1>
+        <p>In today's fast-paced world,access to prompt and efficient medical services is of
+            paramount importance.When faced with a medical emergency or seeking
+            immediate medical attention,the ability to recieve quick medical services can significantly impact the
+            outcome of a situation.
+        </p>
+    </div>
+    <script>
+        function predictAge() {
+            // Get input values
+
+            var haematocrit = document.getElementById("haematocrit").value;
+            var haemoglobin = document.getElementById("haemoglobin").value;
+            var erythrocyte = document.getElementById("erythrocyte").value;
+            var leucocyte = document.getElementById("leucocyte").value;
+            var thrombocyte = document.getElementById("thrombocyte").value;
+            var mch = document.getElementById("mch").value;
+            var mchc = document.getElementById("mchc").value;
+            var mcv = document.getElementById("mcv").value;
+
+            // Prepare input data
+            var inputData = {
+                "haematocrit": haematocrit,
+                "haemoglobin": haemoglobin,
+                "erythrocyte": erythrocyte,
+                "leucocyte": leucocyte,
+                "thrombocyte": thrombocyte,
+                "mch": mch,
+                "mchc": mchc,
+                "mcv": mcv
+            };
+
+            // Make a POST request to the Flask backend
+            fetch('http://127.0.0.1:5000/predict_age', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(inputData),
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Network response was not ok');
+                    }
+                })
+                .then(data => {
+                    // Display the predicted age
+                    document.getElementById("result").innerText = "Predicted Age: " + data.predicted_age;
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+
+        }
+    </script>
+</body>
+
+</html>
